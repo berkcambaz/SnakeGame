@@ -83,9 +83,7 @@ void foodPrint(BahKrEngine& _input) {
 			FoodX = (rand() % 12) + 1;
 			FoodY = (rand() % 12) + 1;
 		}
-
 	}
-
 }
 
 void initializeSnake() {
@@ -99,9 +97,11 @@ void initializeSnake() {
 	level = 3;
 }
 
+int FloatToInt(float _input, int _min, int _max);
+
 int main() {
 	BahKrEngine engine;
-	//start:
+
 	initializeSnake();
 	engine.SetFPSPosition(16, 0);
 	srand((unsigned)time(NULL));
@@ -153,6 +153,7 @@ int main() {
 			}
 			break;
 		}
+
 		if (engine.screen[(int)SnakeHeadY][(int)SnakeHeadX] == '#' || engine.screen[(int)SnakeHeadY][(int)SnakeHeadX] == '@') {
 			if (SnakeHeadY < 0 || SnakeHeadX < 0) {
 			}
@@ -251,9 +252,17 @@ int main() {
 				engine.screen[SnakeBody[i][0]][SnakeBody[i][1]] = '@';
 			}
 		}
-		engine.screen[(int)SnakeHeadY][(int)SnakeHeadX] = 'O';
+		int snakeHeadPositionY = FloatToInt(SnakeHeadY, 0, HEIGHT - 1);
+		int snakeHeadPositionX = FloatToInt(SnakeHeadX, 0, WIDTH - 1);
+
+		if (snakeHeadPositionY >= 0 && snakeHeadPositionX >= 0) {
+			engine.screen[snakeHeadPositionY][snakeHeadPositionX] = 'O';
+		}
+
 		foodPrint(engine);
-		engine.screen[FoodY][FoodX] = '+';
+		if (FoodX >= 0 && FoodY >= 0) {
+			engine.screen[FoodY][FoodX] = '+';
+		}
 
 		engine.PrintScreen(HEIGHT, WIDTH);
 		engine.PrintFPS();
@@ -263,4 +272,17 @@ int main() {
 		engine.GoToXY(0, 0);
 	}
 	return 5;
+}
+
+int FloatToInt(float _input, int _min, int _max) {
+	int temp = (int)_input;
+
+	if (temp < 0) {
+		temp = 0;
+	}
+	if (temp > _max) {
+		temp = _max;
+	}
+
+	return temp;
 }
