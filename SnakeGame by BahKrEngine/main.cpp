@@ -93,7 +93,6 @@ void initializeSnake() {
 	SnakeBodyLength = 19;
 	FoodX = -1;
 	FoodY = -1;
-	//SnakeBody[200][2];
 	level = 3;
 }
 
@@ -154,7 +153,11 @@ int main() {
 			break;
 		}
 
-		if (engine.screen[(int)SnakeHeadY][(int)SnakeHeadX] == '#' || engine.screen[(int)SnakeHeadY][(int)SnakeHeadX] == '@') {
+		int snakeHeadPositionY = FloatToInt(SnakeHeadY, 0, HEIGHT - 1);
+		int snakeHeadPositionX = FloatToInt(SnakeHeadX, 0, WIDTH - 1);
+
+		if (engine.screen[snakeHeadPositionY][snakeHeadPositionX] == '#' ||
+			engine.screen[snakeHeadPositionY][snakeHeadPositionX] == '@') {
 			if (SnakeHeadY < 0 || SnakeHeadX < 0) {
 			}
 			else {
@@ -176,7 +179,7 @@ int main() {
 				return 1;
 			}
 		}
-		if (engine.screen[(int)SnakeHeadY][(int)SnakeHeadX] == '+') {
+		if (engine.screen[snakeHeadPositionY][snakeHeadPositionX] == '+') {
 			FoodX = -1;
 			FoodY = -1;
 			SnakeBodyLength++;
@@ -252,8 +255,8 @@ int main() {
 				engine.screen[SnakeBody[i][0]][SnakeBody[i][1]] = '@';
 			}
 		}
-		int snakeHeadPositionY = FloatToInt(SnakeHeadY, 0, HEIGHT - 1);
-		int snakeHeadPositionX = FloatToInt(SnakeHeadX, 0, WIDTH - 1);
+		snakeHeadPositionY = FloatToInt(SnakeHeadY, 0, HEIGHT - 1);
+		snakeHeadPositionX = FloatToInt(SnakeHeadX, 0, WIDTH - 1);
 
 		if (snakeHeadPositionY >= 0 && snakeHeadPositionX >= 0) {
 			engine.screen[snakeHeadPositionY][snakeHeadPositionX] = 'O';
