@@ -1,12 +1,40 @@
 #include <iostream>
 #include "BahKrEngine.h"
-#define NOBODY -2
+#define NOBODY	-2
+
+#define HEIGHT	16
+#define WIDTH	16
+
+#define HEAD	'O'
+#define TAIL	'o'
+#define WALL	'#'
+#define BLANK	' '
+#define FOOD	'x'
 
 enum direction {
 	UP = 1,
 	RIGHT,
 	DOWN,
 	LEFT
+};
+
+char level1[HEIGHT][WIDTH] =
+{
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
+	"               ",
 };
 
 char level2[HEIGHT][WIDTH] = {
@@ -79,7 +107,7 @@ void foodPrint(BahKrEngine& _input) {
 	if (FoodX == -1 && FoodY == -1) {
 		FoodX = (rand() % 12) + 1;
 		FoodY = (rand() % 12) + 1;
-		while (_input.screen[FoodY][FoodX] != ' ') {
+		while (_input.screen[FoodY][FoodX] != BLANK) {
 			FoodX = (rand() % 12) + 1;
 			FoodY = (rand() % 12) + 1;
 		}
@@ -90,7 +118,7 @@ void initializeSnake() {
 	SnakeHeadX = 5.0f;
 	SnakeHeadY = 5.0f;
 	SnakeSpeed = 2.0f;
-	SnakeBodyLength = 19;
+	SnakeBodyLength = 18;
 	FoodX = -1;
 	FoodY = -1;
 	level = 3;
@@ -99,7 +127,11 @@ void initializeSnake() {
 int FloatToInt(float _input, int _min, int _max);
 
 int main() {
-	BahKrEngine engine;
+	BahKrEngine engine(HEIGHT, WIDTH);
+	//engine.gameMap[0] = level1[0];
+	engine.LoadGameMap(level1[0], HEIGHT);
+
+	//uint8_t(*matrix_ptr)[10][20] = &l_matrix;
 
 	initializeSnake();
 	engine.SetFPSPosition(16, 0);
@@ -113,7 +145,7 @@ int main() {
 
 	while (1) {
 		engine.InitializeTimer();
-		if (GetAsyncKeyState((unsigned short)'W') && direction != 3) {
+		if (GetAsyncKeyState('W') && direction != 3) {
 			direction = UP;
 		}
 		if (GetAsyncKeyState((unsigned short)'A') && direction != 2) {
@@ -156,8 +188,8 @@ int main() {
 		int snakeHeadPositionY = FloatToInt(SnakeHeadY, 0, HEIGHT - 1);
 		int snakeHeadPositionX = FloatToInt(SnakeHeadX, 0, WIDTH - 1);
 
-		if (engine.screen[snakeHeadPositionY][snakeHeadPositionX] == '#' ||
-			engine.screen[snakeHeadPositionY][snakeHeadPositionX] == '@') {
+		if (engine.screen[snakeHeadPositionY][snakeHeadPositionX] == WALL ||
+			engine.screen[snakeHeadPositionY][snakeHeadPositionX] == TAIL) {
 			if (SnakeHeadY < 0 || SnakeHeadX < 0) {
 			}
 			else {
@@ -179,7 +211,7 @@ int main() {
 				return 1;
 			}
 		}
-		if (engine.screen[snakeHeadPositionY][snakeHeadPositionX] == '+') {
+		if (engine.screen[snakeHeadPositionY][snakeHeadPositionX] == FOOD) {
 			FoodX = -1;
 			FoodY = -1;
 			SnakeBodyLength++;
@@ -252,19 +284,19 @@ int main() {
 
 		for (int i = 0; i < 200; i++) {
 			if (SnakeBody[i][0] >= 0 && SnakeBody[i][1] >= 0) {
-				engine.screen[SnakeBody[i][0]][SnakeBody[i][1]] = '@';
+				engine.screen[SnakeBody[i][0]][SnakeBody[i][1]] = TAIL;
 			}
 		}
 		snakeHeadPositionY = FloatToInt(SnakeHeadY, 0, HEIGHT - 1);
 		snakeHeadPositionX = FloatToInt(SnakeHeadX, 0, WIDTH - 1);
 
 		if (snakeHeadPositionY >= 0 && snakeHeadPositionX >= 0) {
-			engine.screen[snakeHeadPositionY][snakeHeadPositionX] = 'O';
+			engine.screen[snakeHeadPositionY][snakeHeadPositionX] = HEAD;
 		}
 
 		foodPrint(engine);
 		if (FoodX >= 0 && FoodY >= 0) {
-			engine.screen[FoodY][FoodX] = '+';
+			engine.screen[FoodY][FoodX] = FOOD;
 		}
 
 		engine.PrintScreen(HEIGHT, WIDTH);
