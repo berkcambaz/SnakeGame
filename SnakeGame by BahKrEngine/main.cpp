@@ -1,9 +1,15 @@
 #include <iostream>
 #include "BahKrEngine.h"
-#define NOBODY	-2
-#define OUTSIDE -1
+
+
+
 #define HEIGHT	16
 #define WIDTH	16
+
+#define NOBODY	-2
+#define OUTSIDE -1
+#define NEXT_LEVEL_LENGTH	8
+#define START_LENGHT		5
 
 #define HEAD	'O'
 #define TAIL	'o'
@@ -95,7 +101,7 @@ int direction = DOWN; //1-up 2-right 3-down 4-left
 float SnakeHeadX = 5.0f;
 float SnakeHeadY = 5.0f;
 float SnakeSpeed = 2.0f;
-int SnakeBodyLength = 2;
+int SnakeBodyLength = START_LENGHT;
 int FoodX = OUTSIDE;
 int FoodY = OUTSIDE;
 int SnakeBody[200][2];
@@ -118,7 +124,7 @@ void initializeSnake() {
 	SnakeHeadX = 5.0f;
 	SnakeHeadY = 5.0f;
 	SnakeSpeed = 2.0f;
-	SnakeBodyLength = 18;
+	SnakeBodyLength = START_LENGHT;
 	FoodX = OUTSIDE;
 	FoodY = OUTSIDE;
 	//level = 3;
@@ -128,11 +134,9 @@ int FloatToInt(float _input, int _min, int _max);
 
 int main() {
 	BahKrEngine engine(HEIGHT, WIDTH);
-	//engine.gameMap[0] = level1[0];
+	
 	engine.LoadGameMap(level1[0], HEIGHT);
-
-	//uint8_t(*matrix_ptr)[10][20] = &l_matrix;
-
+	
 	initializeSnake();
 	engine.SetFPSPosition(16, 0);
 	srand((unsigned)time(NULL));
@@ -145,16 +149,16 @@ int main() {
 
 	while (1) {
 		engine.InitializeTimer();
-		if (GetAsyncKeyState('W') && direction != 3) {
+		if (GetAsyncKeyState('W') && direction != DOWN) {
 			direction = UP;
 		}
-		if (GetAsyncKeyState((unsigned short)'A') && direction != 2) {
+		if (GetAsyncKeyState('A') && direction != RIGHT) {
 			direction = LEFT;
 		}
-		if (GetAsyncKeyState((unsigned short)'S') && direction != 1) {
+		if (GetAsyncKeyState('S') && direction != UP) {
 			direction = DOWN;
 		}
-		if (GetAsyncKeyState((unsigned short)'D') && direction != 4) {
+		if (GetAsyncKeyState('D') && direction != LEFT) {
 			direction = RIGHT;
 		}
 
@@ -215,9 +219,9 @@ int main() {
 			FoodX = OUTSIDE;
 			FoodY = OUTSIDE;
 			SnakeBodyLength++;
-			if (SnakeBodyLength > 19) {
+			if (SnakeBodyLength > NEXT_LEVEL_LENGTH) {
 				level++;
-				SnakeBodyLength = 2;
+				SnakeBodyLength = START_LENGHT;
 				switch (level) {
 				case 2:
 					SnakeSpeed = 3.0f;
@@ -295,10 +299,10 @@ int main() {
 		}
 
 		engine.PrintScreen(HEIGHT, WIDTH);
-		engine.PrintFPS();
+		//engine.PrintFPS();
 		engine.PrintText(SnakeBodyLength, 17, 0);
-		engine.PrintText((int)SnakeHeadX, 18, 0);
-		engine.PrintText((int)SnakeHeadY, 18, 5);
+		//engine.PrintText((int)SnakeHeadX, 18, 0);
+		//engine.PrintText((int)SnakeHeadY, 18, 5);
 		engine.GoToXY(0, 0);
 	}
 	return 5;
