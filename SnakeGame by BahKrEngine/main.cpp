@@ -8,7 +8,7 @@
 
 #define NOBODY	-2
 #define OUTSIDE -1
-#define NEXT_LEVEL_LENGTH	8
+#define NEXT_LEVEL_LENGTH	6
 #define START_LENGHT		5
 
 #define HEAD	'O'
@@ -16,6 +16,8 @@
 #define WALL	'#'
 #define BLANK	' '
 #define FOOD	'x'
+
+#define SNAKE_MAX_LENGTH 200
 
 enum direction {
 	UP = 1,
@@ -104,7 +106,7 @@ float SnakeSpeed = 2.0f;
 int SnakeBodyLength = START_LENGHT;
 int FoodX = OUTSIDE;
 int FoodY = OUTSIDE;
-int SnakeBody[200][2];
+int SnakeBody[SNAKE_MAX_LENGTH][2];
 int level = 1;
 
 
@@ -128,6 +130,13 @@ void initializeSnake() {
 	FoodX = OUTSIDE;
 	FoodY = OUTSIDE;
 	//level = 3;
+}
+
+void cleanSnake(int snakeMaxLength) {
+	for (int i = 0;i < snakeMaxLength;i++) {
+		SnakeBody[i][0] = NOBODY;
+		SnakeBody[i][1] = NOBODY;
+	}
 }
 
 int FloatToInt(float _input, int _min, int _max);
@@ -221,6 +230,7 @@ int main() {
 			SnakeBodyLength++;
 			if (SnakeBodyLength > NEXT_LEVEL_LENGTH) {
 				level++;
+				cleanSnake(SNAKE_MAX_LENGTH);
 				SnakeBodyLength = START_LENGHT;
 				switch (level) {
 				case 2:
