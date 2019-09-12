@@ -1,7 +1,7 @@
 #include <iostream>
 #include "BahKrEngine.h"
 #define NOBODY	-2
-
+#define OUTSIDE -1
 #define HEIGHT	16
 #define WIDTH	16
 
@@ -58,15 +58,15 @@ char level2[HEIGHT][WIDTH] = {
 char level3[HEIGHT][WIDTH] = {
 "###############",
 "#             #",
-"#   #     #   #",
 "#             #",
 "#   #     #   #",
 "#             #",
-"#   #     #   #",
 "#             #",
 "#   #     #   #",
 "#             #",
+"#             #",
 "#   #     #   #",
+"#             #",
 "#             #",
 "#   #     #   #",
 "#             #",
@@ -80,8 +80,8 @@ char level4[HEIGHT][WIDTH] = {
 "       #       ",
 "#      #      #",
 "#      #      #",
-"#      #      #",
-"#      #      #",
+"#             #",
+"#             #",
 "#      #      #",
 "#      #      #",
 "       #       ",
@@ -96,15 +96,15 @@ float SnakeHeadX = 5.0f;
 float SnakeHeadY = 5.0f;
 float SnakeSpeed = 2.0f;
 int SnakeBodyLength = 2;
-int FoodX = -1;
-int FoodY = -1;
+int FoodX = OUTSIDE;
+int FoodY = OUTSIDE;
 int SnakeBody[200][2];
 int level = 1;
 
 
 
 void foodPrint(BahKrEngine& _input) {
-	if (FoodX == -1 && FoodY == -1) {
+	if (FoodX == OUTSIDE && FoodY == OUTSIDE) {
 		FoodX = (rand() % 12) + 1;
 		FoodY = (rand() % 12) + 1;
 		while (_input.screen[FoodY][FoodX] != BLANK) {
@@ -119,9 +119,9 @@ void initializeSnake() {
 	SnakeHeadY = 5.0f;
 	SnakeSpeed = 2.0f;
 	SnakeBodyLength = 18;
-	FoodX = -1;
-	FoodY = -1;
-	level = 3;
+	FoodX = OUTSIDE;
+	FoodY = OUTSIDE;
+	//level = 3;
 }
 
 int FloatToInt(float _input, int _min, int _max);
@@ -212,8 +212,8 @@ int main() {
 			}
 		}
 		if (engine.screen[snakeHeadPositionY][snakeHeadPositionX] == FOOD) {
-			FoodX = -1;
-			FoodY = -1;
+			FoodX = OUTSIDE;
+			FoodY = OUTSIDE;
 			SnakeBodyLength++;
 			if (SnakeBodyLength > 19) {
 				level++;
@@ -256,11 +256,6 @@ int main() {
 
 			}
 		}
-
-
-
-
-
 
 		engine.SetScreen(HEIGHT, WIDTH);
 
